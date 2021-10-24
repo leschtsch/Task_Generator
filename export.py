@@ -33,7 +33,7 @@ def get_path(path):
     # получение списка файлов в директории с нужным именем и без расширения
 
     # получение индекса файла при имени
-    index = ''
+    index = ''  # TODO: индексы для имен с цифрами
     if not files:
         return os.path.join(path, name)
     for i in files[-1]:

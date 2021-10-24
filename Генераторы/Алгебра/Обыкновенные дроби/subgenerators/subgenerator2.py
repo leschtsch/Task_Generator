@@ -8,7 +8,7 @@ def get_nums(difficulty):
     elif difficulty == 2:
         return randint(2, 99) * choice((-1, 1)), randint(2, 99) * choice((-1, 1))
     elif difficulty == 3:
-        return randint(2, 999) * choice((-1, 1)), randint(2, 999) * choice((-1, 1))
+        return randint(100, 999) * choice((-1, 1)), randint(100, 999) * choice((-1, 1))
 
 
 def get_denoms(difficulty):
@@ -16,7 +16,7 @@ def get_denoms(difficulty):
         denom = randint(2, 99)
         return denom, denom
     elif difficulty == 3:
-        denom = randint(2, 999)
+        denom = randint(100, 999)
         return denom, denom
 
 

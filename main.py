@@ -43,10 +43,12 @@ if generator:
         elif params == 'Generate':
             interface.status = 'генерация задач'
             interface.tick()
-            tasks, answers = generator.generate()
+            generated = generator.generate()
+            tasks = generated[0]
+            answers = generated[1]
             interface.status = 'сохранение задач'
             interface.tick()
-            save_path = filesavebox(msg='сохранение файла', default='задания')
+            save_path = filesavebox(msg='сохранение файла', default=generated[2])
             if save_path:
                 export(tasks, answers, save_path)
                 interface.generated += 1

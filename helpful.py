@@ -8,8 +8,10 @@ PRIMES1000 = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61
               887, 907, 911, 919, 929, 937, 941, 947, 953, 967, 971, 977, 983, 991, 997]
 
 
-def primes(n):
-    return [i for i in PRIMES1000 if i <= n]
+def primes(n, m=None):
+    if m is None:
+        return [i for i in PRIMES1000 if i <= n]
+    return [i for i in PRIMES1000 if n <= i <= m]
 
 
 def str_sign(a):

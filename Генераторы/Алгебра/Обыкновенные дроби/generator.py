@@ -1,6 +1,5 @@
 from interface import GeneratorParameter as P
-import os
-import sys
+import time
 
 
 class Generator:
@@ -46,22 +45,59 @@ class Generator:
             self.ready = False
             self.status = 'количество задач должно быть целым и больше 0'
 
+    def get_save_name(self):
+        theme = {
+            'Перевод обыкновенные - смешанные': 'перевод',
+            '+/- с одинаковыми знаменателями': 'одинак.знам',
+            '+/- с взаимно простыми знаменателями': 'вз.пр.знам.',
+            '+/- с кратными знаменателями': 'кратн.знам',
+            '+/- со знаменателями с общим множителем': 'общ.мн.',
+            '+/- с любыми знаменателями': 'НОД и НОК'
+        }
+        return 'Алгебра-об.дроби-%s-%s-%s' % (
+            theme[self.selected_params['task_type']], self.selected_params['difficulty_level'],
+            time.strftime('%d.%m_%H.%M.%S', time.gmtime(time.time())))
+
     def generate(self):
         if self.selected_params['task_type'] == 'Перевод обыкновенные - смешанные':
             import subgenerator1
-            return subgenerator1.generate(self.selected_params)
+            res = []
+            ta = subgenerator1.generate(self.selected_params)
+            res.extend(ta)
+            res.append(self.get_save_name())
+            return res
         elif self.selected_params['task_type'] == '+/- с одинаковыми знаменателями':
             import subgenerator2
-            return subgenerator2.generate(self.selected_params)
+            res = []
+            ta = subgenerator2.generate(self.selected_params)
+            res.extend(ta)
+            res.append(self.get_save_name())
+            return res
         elif self.selected_params['task_type'] == '+/- с взаимно простыми знаменателями':
             import subgenerator3
-            return subgenerator3.generate(self.selected_params)
+            res = []
+            ta = subgenerator3.generate(self.selected_params)
+            res.extend(ta)
+            res.append(self.get_save_name())
+            return res
         elif self.selected_params['task_type'] == '+/- с кратными знаменателями':
             import subgenerator4
-            return subgenerator4.generate(self.selected_params)
+            res = []
+            ta = subgenerator4.generate(self.selected_params)
+            res.extend(ta)
+            res.append(self.get_save_name())
+            return res
         elif self.selected_params['task_type'] == '+/- со знаменателями с общим множителем':
             import subgenerator5
-            return subgenerator5.generate(self.selected_params)
+            res = []
+            ta = subgenerator5.generate(self.selected_params)
+            res.extend(ta)
+            res.append(self.get_save_name())
+            return res
         elif self.selected_params['task_type'] == '+/- с любыми знаменателями':
             import subgenerator6
-            return subgenerator6.generate(self.selected_params)
+            res = []
+            ta = subgenerator6.generate(self.selected_params)
+            res.extend(ta)
+            res.append(self.get_save_name())
+            return res
