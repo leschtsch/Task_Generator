@@ -1,20 +1,8 @@
 import sys
 import os.path
 import time
-import subprocess
-import pkg_resources
 
-
-def install_modules():
-    required = {'pygame', 'pygame-gui', 'python-docx', 'lxml', 'easygui', 'latex2mathml'}
-    installed = {pkg.key for pkg in pkg_resources.working_set}
-    missing = required - installed
-    if missing:
-        subprocess.check_call([sys.executable, '-m', 'pip', 'install', *missing])
-
-
-install_modules()
-
+import setup
 from easygui import fileopenbox, filesavebox
 
 from export import export
