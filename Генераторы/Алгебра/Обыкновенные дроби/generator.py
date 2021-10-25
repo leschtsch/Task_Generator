@@ -4,7 +4,7 @@ import time
 
 class Generator:
     def __init__(self):
-        self.window_size = (800, 600)
+        self.window_size = (650, 500)
 
         self.needed_params = [
             P(name='task_type', type_='radio_list', relative_rect=(20, 100, 350, 126), description='тип задачи:',

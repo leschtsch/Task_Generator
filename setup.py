@@ -12,11 +12,11 @@ def install_missing():
     Данная функция устанавливает необходимые модули
     :return: None
     """
-    # получение списка недостающих модулей
+    # получение множества недостающих модулей
     required = {'pygame', 'pygame-gui', 'python-docx', 'lxml', 'easygui', 'latex2mathml'}
     installed = {pkg.key for pkg in pkg_resources.working_set}
     missing = required - installed
-    # получение списка недостающих модулей
+    # получение множества недостающих модулей
 
     if not missing:  # проверка, надо ли что-то устанавливать
         return

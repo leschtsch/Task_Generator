@@ -28,7 +28,7 @@ class Interface:
             self.widgets[i.name] = (i, create_widget(i, self.__manager))
 
         self.__generate_button = pygame_gui.elements.UIButton(
-            relative_rect=pygame.Rect(self.__window_size[0] // 2 - 150, self.__window_size[1] - 50, 300, 50),
+            relative_rect=pygame.Rect(self.__window_size[0] // 2 - 150, self.__window_size[1] - 60, 300, 50),
             manager=self.__manager,
             text='СГЕНЕРИРОВАТЬ'
         )
