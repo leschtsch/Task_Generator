@@ -35,21 +35,21 @@ def get_denoms(difficulty):
 
         return gcd * a, gcd * b
     elif difficulty == 2:
-        primes17 = primes(8, 17)
-        gcd = choice(primes17)
+        primes7 = primes(7)
+        gcd = choice(primes(17))
 
         a_set = set()
         a = 1
-        t = choice(primes17)
-        while a * t <= 25:
+        t = choice(primes7)
+        while a * t <= 30:
             a *= t
             a_set.add(t)
-            t = choice(primes17)
+            t = choice(primes7)
 
-        b_set = set(primes17) - a_set
+        b_set = set(primes7) - a_set
         b = 1
         t = choice(list(b_set))
-        while b * t <= 25:
+        while b * t <= 30:
             b *= t
             t = choice(list(b_set))
 

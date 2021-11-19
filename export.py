@@ -107,9 +107,25 @@ def export(tasks: typing.List[str], answers: typing.List[str], path: str) -> str
 # проверка работоспособности
 if __name__ == '__main__':
     tasks = [r'x^2+2x+1',
-             r'x^2-1',
-             r'\frac{111}{74}']
-    answers = [r'(x+1)^2', r'(x+1)(x-1)', r'1\frac{1}{2}']
-    name = 'тест'
+             r'''
+             
+             ''',
+             r'\frac{111}{74}',
+             r'\int_0^\infty{e^{-x}dx}',
+             r'\frac{n!}{k!(n-k)!} = \binom{n}{k}']
+    answers = [r'\left\{\frac{x^2}{y^3}\right\}', r'(x+1)(x-1)', r'1\frac{1}{2}', r'\forall x \in X, \quad \exists y \leq \epsilon',
+               r'''
+\begin{equation}
+  x = a_0 + \cfrac{1}{a_1 
+          + \cfrac{1}{a_2 
+          + \cfrac{1}{a_3 + \cfrac{1}{a_4} } } }
+\end{equation}''',
+               r'''
+ \begin{matrix}
+  a & b & c \\
+  d & e & f \\
+  g & h & i
+ \end{matrix}''']
+    name = os.getcwd() + '/тест'
     export(tasks, answers, name)
 # проверка работоспособности

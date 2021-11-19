@@ -22,12 +22,24 @@ def get_denoms(difficulty):
             denom2 = denom1 + 2
             return denom1, denom2
     elif difficulty == 2:
-        if prob == 0:
-            primes31 = primes(16,31)
-            denom1 = choice(primes31)
-            primes31.remove(denom1)
-            denom2 = choice(primes31)
-            return denom1, denom2
+        if prob == 0 or True:
+            primes7 = primes(7)
+            a = 1
+            a_set = set()
+            t = choice(primes7)
+            while a * t <= 49:
+                a *= t
+                a_set.add(t)
+                t = choice(primes7)
+
+            b_set = set(primes7) - a_set
+            b = 1
+            t = choice(list(b_set))
+            while b * t <= 49:
+                b *= t
+                t = choice(list(b_set))
+
+            return a, b
         elif prob == 1:
             denom1 = randint(16, 30)
             denom2 = denom1 + 1
@@ -38,7 +50,7 @@ def get_denoms(difficulty):
             return denom1, denom2
     elif difficulty == 3:
         if prob == 0:
-            primes53 = primes(32,53)
+            primes53 = primes(32, 53)
             denom1 = choice(primes53)
             primes53.remove(denom1)
             denom2 = choice(primes53)
