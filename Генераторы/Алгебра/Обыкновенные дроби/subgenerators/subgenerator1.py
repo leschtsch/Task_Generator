@@ -5,17 +5,25 @@ from math import gcd
 def get_frac_task(num, denom, sign=''):
     if randint(0, 1):
         latex_common = sign + r'\frac{%d}{%d}' % (num, denom)
+        int_ = num // denom
         num2 = num % denom
         g = gcd(num2, denom)
         num2 //= g
-        denom //= g
-        latex_mixed = sign + r'%d\frac{%d}{%d}' % (num // denom, num2, denom)
+        denom2 = denom // g
+        if num2:
+            latex_mixed = sign+r'%d\frac{%d}{%d}' % (int_, num2, denom2)
+        else:
+            latex_mixed = sign+str(int_)
         return latex_common, latex_common + ' = ' + latex_mixed
     else:
-        latex_mixed = sign + r'%d\frac{%d}{%d}' % (num // denom, num % denom, denom)
+        if not num % denom:
+            num += 1
+        int_ = num // denom
+        num2 = num % denom
+        latex_mixed = sign + r'%d\frac{%d}{%d}' % (int_, num2, denom)
         g = gcd(num, denom)
         num //= g
-        denom //= g
+        denom = denom // g
         latex_common = sign + r'\frac{%d}{%d}' % (num, denom)
         return latex_mixed, latex_mixed + ' = ' + latex_common
 

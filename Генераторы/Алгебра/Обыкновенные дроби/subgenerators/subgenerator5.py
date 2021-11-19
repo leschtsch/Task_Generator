@@ -15,18 +15,18 @@ def get_nums(difficulty):
 
 def get_denoms(difficulty):
     if difficulty == 1:
-        primes7 = primes(7)
-        gcd = choice(primes7)
+        primes11 = primes(7)
+        gcd = choice(primes11)
 
         a_set = set()
         a = 1
-        t = choice(primes7)
+        t = choice(primes11)
         while a * t <= 10:
             a *= t
             a_set.add(t)
-            t = choice(primes7)
+            t = choice(primes11)
 
-        b_set = set(primes7) - a_set
+        b_set = set(primes11) - a_set
         b = 1
         t = choice(list(b_set))
         while b * t <= 10:
@@ -35,18 +35,18 @@ def get_denoms(difficulty):
 
         return gcd * a, gcd * b
     elif difficulty == 2:
-        primes7 = primes(7)
-        gcd = choice(primes(17))
+        primes11 = primes(11)
+        gcd = choice(primes(11))
 
         a_set = set()
         a = 1
-        t = choice(primes7)
+        t = choice(primes11)
         while a * t <= 30:
             a *= t
             a_set.add(t)
-            t = choice(primes7)
+            t = choice(primes11)
 
-        b_set = set(primes7) - a_set
+        b_set = set(primes11) - a_set
         b = 1
         t = choice(list(b_set))
         while b * t <= 30:

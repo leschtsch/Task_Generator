@@ -9,9 +9,10 @@ import typing
 from docx import Document, enum  # чтобы работать с вордом
 from lxml import etree  # чтобы конвертировать MML в OMML
 import latex2mathml.converter  # чтобы конвертировать LaTeX в MMl
+from easygui import filesavebox
 
 
-def get_path(path):
+def __get_path(path):
     """
     Данная функция нужна, чтобы получить имя для сохранения дубликатов файлов.
     Если нужной директории нет, создает ее.
@@ -46,7 +47,7 @@ def get_path(path):
     return os.path.join(path, name)  # возврат пути
 
 
-def convert_latex(latex: str) -> str:
+def __convert_latex(latex: str) -> str:
     """
     Данная функция преобразует LaTeX в OMML
     :param latex: строка LaTeX
@@ -67,21 +68,25 @@ def convert_latex(latex: str) -> str:
     # MathML в Office MathML и возврат
 
 
-def export(tasks: typing.List[str], answers: typing.List[str], path: str) -> str:
+def to_docx(tasks: typing.List[str], answers: typing.List[str], default: str) -> typing.Union[str, None]:
     """
     Сохраняет занания и ответы в docx и возвращает путь к сохраненному файлу.
     :param tasks: список заданий в виде LaTex. (без $)!
     :param answers: список заданий в виде LaTex. (без $)!
-    :param path: путь, куда сохранять файл (с именем, но без расширения)
-    :return: путь, куда файл в итоге сохранен
+    :param default: имя по умолчанию
+    :return строка, если удалось сохранить, иначе None
     """
+    path = filesavebox(msg='сохранение файла', default=default)
+    if not path:
+        return
+
     doc = Document()  # пустой документ
 
     # вставка заданий
     for i in range(len(tasks)):
         paragraph = doc.add_paragraph()
         paragraph.add_run(str(i + 1) + '.\t')
-        paragraph._element.append(convert_latex(tasks[i]))
+        paragraph._element.append(__convert_latex(tasks[i]))
     # вставка заданий
 
     # вставка разрыва страницы
@@ -94,12 +99,12 @@ def export(tasks: typing.List[str], answers: typing.List[str], path: str) -> str
     for i in range(len(answers)):
         paragraph = doc.add_paragraph()
         paragraph.add_run(str(i + 1) + '.\t')
-        paragraph._element.append(convert_latex(answers[i]))
+        paragraph._element.append(__convert_latex(answers[i]))
     # вставка ответов
 
     # сохранение и возврат пути
-    path = get_path(path)
-    doc.save(f'{get_path(path)}.docx')
+    path = __get_path(path)
+    doc.save(f'{__get_path(path)}.docx')
     return path
     # сохранение и возврат пути
 
@@ -107,13 +112,15 @@ def export(tasks: typing.List[str], answers: typing.List[str], path: str) -> str
 # проверка работоспособности
 if __name__ == '__main__':
     tasks = [r'x^2+2x+1',
-             r'''
-             
-             ''',
+             r'',
              r'\frac{111}{74}',
              r'\int_0^\infty{e^{-x}dx}',
-             r'\frac{n!}{k!(n-k)!} = \binom{n}{k}']
-    answers = [r'\left\{\frac{x^2}{y^3}\right\}', r'(x+1)(x-1)', r'1\frac{1}{2}', r'\forall x \in X, \quad \exists y \leq \epsilon',
+             r'\frac{n!}{k!(n-k)!} = \binom{n}{k}'
+             ]
+    answers = [r'\left\{\frac{x^2}{y^3}\right\}',
+               r'(x+1)(x-1)',
+               r'1\frac{1}{2}',
+               r'\forall x \in X, \quad \exists y \leq \epsilon',
                r'''
 \begin{equation}
   x = a_0 + \cfrac{1}{a_1 
@@ -125,7 +132,8 @@ if __name__ == '__main__':
   a & b & c \\
   d & e & f \\
   g & h & i
- \end{matrix}''']
+ \end{matrix}'''
+               ]
     name = os.getcwd() + '/тест'
-    export(tasks, answers, name)
+    to_docx(tasks, answers, name)
 # проверка работоспособности

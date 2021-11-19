@@ -1,5 +1,7 @@
-from interface import GeneratorParameter as P
 import time
+
+from interface import GeneratorParameter as P
+from export.old import to_docx
 
 
 class Generator:
@@ -27,6 +29,7 @@ class Generator:
         }
 
         self.status = 'ожидание параметров'
+        self.generated = 0
         self.ready = False
 
     def set_params(self, params):
@@ -60,45 +63,39 @@ class Generator:
         # TODO: local time
 
     def generate(self):
+        res = []
         if self.selected_params['task_type'] == 'Перевод обыкновенные - смешанные':
             import subgenerator1
-            res = []
             tasks = subgenerator1.generate(self.selected_params)
             res.extend(tasks)
             res.append(self.get_save_name())
-            return res
         elif self.selected_params['task_type'] == '+/- с одинаковыми знаменателями':
             import subgenerator2
-            res = []
             tasks = subgenerator2.generate(self.selected_params)
             res.extend(tasks)
             res.append(self.get_save_name())
-            return res
         elif self.selected_params['task_type'] == '+/- с взаимно простыми знаменателями':
             import subgenerator3
-            res = []
             tasks = subgenerator3.generate(self.selected_params)
             res.extend(tasks)
             res.append(self.get_save_name())
             return res
         elif self.selected_params['task_type'] == '+/- с кратными знаменателями':
             import subgenerator4
-            res = []
             tasks = subgenerator4.generate(self.selected_params)
             res.extend(tasks)
             res.append(self.get_save_name())
-            return res
         elif self.selected_params['task_type'] == '+/- со знаменателями с общим множителем':
             import subgenerator5
-            res = []
             tasks = subgenerator5.generate(self.selected_params)
             res.extend(tasks)
             res.append(self.get_save_name())
-            return res
         elif self.selected_params['task_type'] == '+/- с любыми знаменателями':
             import subgenerator6
-            res = []
             tasks = subgenerator6.generate(self.selected_params)
             res.extend(tasks)
             res.append(self.get_save_name())
-            return res
+
+        path = to_docx(*res)
+        if path is not None:
+            self.generated += 1
