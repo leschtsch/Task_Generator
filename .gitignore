@@ -3,5 +3,8 @@
 /__pycache__
 /venv
 /Documentation
+/Примеры задач
+/Примеры задач.zip
 /*.docx
+!Word и altTeX.docx
 general_todos.py

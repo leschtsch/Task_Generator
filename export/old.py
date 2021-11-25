@@ -4,6 +4,7 @@
 
 import re
 import os
+import pathlib
 import typing
 
 from docx import Document, enum  # чтобы работать с вордом
@@ -61,7 +62,7 @@ def __convert_latex(latex: str) -> str:
     https://github.com/python-openxml/python-docx/issues/320
     '''
     tree = etree.fromstring(mathml)
-    xslt = etree.parse('MML2OMML.xsl')
+    xslt = etree.parse(str(next(pathlib.Path(os.getcwd()).glob('**/MML2OMML.xsl'))))
     transform = etree.XSLT(xslt)
     new_dom = transform(tree)
     return new_dom.getroot()
@@ -111,29 +112,8 @@ def to_docx(tasks: typing.List[str], answers: typing.List[str], default: str) ->
 
 # проверка работоспособности
 if __name__ == '__main__':
-    tasks = [r'x^2+2x+1',
-             r'',
-             r'\frac{111}{74}',
-             r'\int_0^\infty{e^{-x}dx}',
-             r'\frac{n!}{k!(n-k)!} = \binom{n}{k}'
-             ]
-    answers = [r'\left\{\frac{x^2}{y^3}\right\}',
-               r'(x+1)(x-1)',
-               r'1\frac{1}{2}',
-               r'\forall x \in X, \quad \exists y \leq \epsilon',
-               r'''
-\begin{equation}
-  x = a_0 + \cfrac{1}{a_1 
-          + \cfrac{1}{a_2 
-          + \cfrac{1}{a_3 + \cfrac{1}{a_4} } } }
-\end{equation}''',
-               r'''
- \begin{matrix}
-  a & b & c \\
-  d & e & f \\
-  g & h & i
- \end{matrix}'''
-               ]
+    tasks = [r'''\mathrm{H_2O_2 \rightleftarrows H^++HO_2^-}''']
+    answers = [r'\mathrm{MnO_4^- + 8H^+ \longrightarrow{t} Mn^{2+} + 4H_2O}']
     name = os.getcwd() + '/тест'
     to_docx(tasks, answers, name)
 # проверка работоспособности

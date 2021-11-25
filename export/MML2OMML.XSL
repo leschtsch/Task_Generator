@@ -106,7 +106,7 @@
   <!-- Template used to determine if the current token element (ndCur) is the beginning of a run. 
 			 A token element is the beginning of if:
 			 
-			 the count of preceding elements is 0 
+			 the count of preceding word_elements is 0
 			 or 
 			 the directory preceding element is not a non-glyph token.
 	-->
@@ -199,8 +199,8 @@
                        mml:mtext[not(child::mml:mglyph)]">
 
     <!-- tokens with mglyphs as children are tranformed
-			 in a different manner than "normal" token elements.  
-			 Where normal token elements are token elements that
+			 in a different manner than "normal" token word_elements.
+			 Where normal token word_elements are token word_elements that
 			 contain only text -->
     <xsl:variable name="fStartOfRun">
       <xsl:call-template name="FStartOfRun">
@@ -501,10 +501,10 @@
     </xsl:variable>
 
     <!-- The omml equivalent structure for mml:mtext is an omml run with the run property m:nor (normal) set.
-         Therefore, we can only collect mtexts with  other mtext elements.  Suppose the $ndTokenFirst is an 
-         mml:mtext, then if any of its following siblings are to be grouped, they must also be mml:text elements.  
+         Therefore, we can only collect mtexts with  other mtext word_elements.  Suppose the $ndTokenFirst is an
+         mml:mtext, then if any of its following siblings are to be grouped, they must also be mml:text word_elements.
          The inverse is also true, suppose the $ndTokenFirst isn't an mml:mtext, then if any of its following siblings 
-         are to be grouped with $ndTokenFirst, they can't be mml:mtext elements-->
+         are to be grouped with $ndTokenFirst, they can't be mml:mtext word_elements-->
     <xsl:variable name="fNdTokenFirstIsMText">
       <xsl:choose>
         <xsl:when test="$ndTokenFirst/self::mml:mtext">1</xsl:when>
@@ -527,14 +527,14 @@
 				props.
 				
 				To accomplish this grouping, we want to find the next sibling to ndTokenFirst that shouldn't be 
-				included in the run of text.  We do this by counting the number of elements that precede the first
+				included in the run of text.  We do this by counting the number of word_elements that precede the first
 				such element that doesn't belong.  The xpath that accomplishes this is below.
 				    
 						Count the number of siblings the precede the first element after ndTokenFirst that shouldn't belong.
 						count($ndTokenFirst/following-sibling::*[ . . . ][1]/preceding-sibling::*)
 						
 				Now, the hard part to this is what is represented by the '. . .' above.  This conditional expression is 
-				defining what elements *don't* belong to the current run.  The conditions are as follows:
+				defining what word_elements *don't* belong to the current run.  The conditions are as follows:
 				
 				The element is not a token element (mi, mn, mo, ms, or mtext)
 				
@@ -546,9 +546,9 @@
 				
 				The token is an mtext and the run didn't start with an mtext, or the token isn't an mtext and the run started 
 				with an mtext.  We do this check because mtext transforms into an omml m:nor property, and thus, these mtext
-				token elements need to be grouped separately from other token elements.
+				token word_elements need to be grouped separately from other token word_elements.
 				
-				// We do an or not( . . . ), because it was easier to define what token elements match than how they don't match.
+				// We do an or not( . . . ), because it was easier to define what token word_elements match than how they don't match.
 				// Thus, this inner '. . .' defines how token attributes equate to one another.  We add the 'not' outside of to accomplish
 				// the goal of the outer '. . .', which is the find the next element that *doesn't* match.
 				or not(
@@ -2684,7 +2684,7 @@
       <!-- Next, if there are no scripts -->
       <xsl:when test="$cndScriptStrict &lt;= 0">
         <!-- we know we have some prescripts or else we would have taken the earlier
-					  branch. So, create an sPre and split the elements -->
+					  branch. So, create an sPre and split the word_elements -->
         <m:sPre>
           <m:e>
             <xsl:call-template name="CreateArgProp" />
@@ -2692,7 +2692,7 @@
           </m:e>
 
           <!-- The prescripts come after the mml:mprescript and if we get here
-							we know there exists some elements after the mml:mprescript element. 
+							we know there exists some word_elements after the mml:mprescript element.
 							
 							The prescript element has no sub/subsup variation, therefore, even if
 							we're only writing sub, we need to write out both the sub and sup element.
@@ -2867,7 +2867,7 @@
 
   <!-- This template determines if ndCur is a special collection.
 			 By special collection, I mean is ndCur the outer element of some special grouping 
-			 of mathml elements that actually represents some over all omml structure.
+			 of mathml word_elements that actually represents some over all omml structure.
 			 
 			 For instance, is ndCur a linear fraction, or an omml function.
 	-->
@@ -2897,7 +2897,7 @@
   <!-- This template iterates through the children of an equation array row (mtr) and outputs
 	     the equation.
 			 
-			 This template does all the work to output ampersands and skip the right elements when needed.
+			 This template does all the work to output ampersands and skip the right word_elements when needed.
 	-->
   <xsl:template name="ProcessEqArrayRow">
     <xsl:param name="ndCur" select="." />
@@ -2986,10 +2986,10 @@
 			 Our equation array transformation is very simple.  The main goal of this transform is to
 			 allow roundtripping omml eq arrays through mathml.  The template ProcessEqArrayRow was never
 			 intended to account for many of the alignment flexibilities that are present in mathml like 
-			 using the alig attribute, using alignmark attribute in token elements, etc.
+			 using the alig attribute, using alignmark attribute in token word_elements, etc.
 			 
-			 The restrictions on this transform require <malignmark> and <maligngroup> elements to be outside of
-			 any non-grouping mathml elements (that is, mrow and mstyle).  Moreover, these elements cannot be the children of
+			 The restrictions on this transform require <malignmark> and <maligngroup> word_elements to be outside of
+			 any non-grouping mathml word_elements (that is, mrow and mstyle).  Moreover, these word_elements cannot be the children of
 			 mrows that represent linear fractions or functions.  Also, <malignmark> cannot be a child
 			 of token attributes.
 			 
@@ -3716,7 +3716,7 @@
       <!-- This ndCur is in fact part of an nAry if
       
            1)  The last descendant of ndCur (which could be ndCur itself) is an operator.
-           2)  Along that chain of descendants we only encounter mml:mo, mml:mstyle, and mml:mrow elements.
+           2)  Along that chain of descendants we only encounter mml:mo, mml:mstyle, and mml:mrow word_elements.
            3)  the operator in mml:mo is a valid nAry operator
            4)  The nAry is not accented.
            -->

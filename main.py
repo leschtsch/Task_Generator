@@ -9,7 +9,6 @@ import time
 import setup
 from easygui import fileopenbox, filesavebox  # чтобы открыть генератор и сохранить задачи
 
-from export import old
 from interface import *
 
 
