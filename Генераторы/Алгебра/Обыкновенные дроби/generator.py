@@ -1,7 +1,8 @@
 import time
 
 from interface import GeneratorParameter as P
-from export.old import to_docx
+from export.word_elements import *
+from export.word import to_docx
 
 
 class Generator:
@@ -48,7 +49,7 @@ class Generator:
             self.ready = False
             self.status = 'количество задач должно быть целым и больше 0'
 
-    def get_save_name(self):
+    def __get_save_name(self):
         theme = {
             'Перевод обыкновенные - смешанные': 'перевод',
             '+/- с одинаковыми знаменателями': 'одинак.знам',
@@ -63,39 +64,38 @@ class Generator:
         # TODO: local time
 
     def generate(self):
-        res = []
+        descs = [
+            'Переведите обыкновенные дроби в смешанные, а смешанные - в обыкновенные.',
+            'Решите примеры.'
+        ]
+        desc = ''
+        tasks, answers = [], []
         if self.selected_params['task_type'] == 'Перевод обыкновенные - смешанные':
             import subgenerator1
-            tasks = subgenerator1.generate(self.selected_params)
-            res.extend(tasks)
-            res.append(self.get_save_name())
+            desc = descs[0]
+            tasks, answers = subgenerator1.generate(self.selected_params)
         elif self.selected_params['task_type'] == '+/- с одинаковыми знаменателями':
             import subgenerator2
-            tasks = subgenerator2.generate(self.selected_params)
-            res.extend(tasks)
-            res.append(self.get_save_name())
+            desc = descs[1]
+            tasks, answers = subgenerator2.generate(self.selected_params)
         elif self.selected_params['task_type'] == '+/- с взаимно простыми знаменателями':
             import subgenerator3
-            tasks = subgenerator3.generate(self.selected_params)
-            res.extend(tasks)
-            res.append(self.get_save_name())
-            return res
+            desc = descs[1]
+            tasks, answers = subgenerator3.generate(self.selected_params)
         elif self.selected_params['task_type'] == '+/- с кратными знаменателями':
             import subgenerator4
-            tasks = subgenerator4.generate(self.selected_params)
-            res.extend(tasks)
-            res.append(self.get_save_name())
+            desc = descs[1]
+            tasks, answers = subgenerator4.generate(self.selected_params)
         elif self.selected_params['task_type'] == '+/- со знаменателями с общим множителем':
             import subgenerator5
-            tasks = subgenerator5.generate(self.selected_params)
-            res.extend(tasks)
-            res.append(self.get_save_name())
+            desc = descs[1]
+            tasks, answers = subgenerator5.generate(self.selected_params)
         elif self.selected_params['task_type'] == '+/- с любыми знаменателями':
             import subgenerator6
-            tasks = subgenerator6.generate(self.selected_params)
-            res.extend(tasks)
-            res.append(self.get_save_name())
+            desc = descs[1]
+            tasks, answers = subgenerator6.generate(self.selected_params)
 
-        path = to_docx(*res)
-        if path is not None:
-            self.generated += 1
+        name = self.__get_save_name()
+        els = [Text(desc), List([LatexFormula(i) for i in tasks], style='number'), PageBreak(), Text('Ответы:'),
+               List([LatexFormula(i) for i in answers], style='number')]
+        to_docx(els, name)

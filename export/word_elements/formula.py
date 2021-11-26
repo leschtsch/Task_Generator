@@ -2,6 +2,7 @@ import pathlib
 import os
 
 from docx import Document
+from docx.shared import Pt
 from lxml import etree  # чтобы конвертировать MML в OMML
 import latex2mathml.converter  # чтобы конвертировать LaTeX в MMl
 
@@ -18,4 +19,5 @@ class LatexFormula:
         self.xml = new_dom.getroot()
 
     def insert(self, doc: Document):
+        doc.paragraphs[-1].add_run(' ')
         doc.paragraphs[-1]._element.append(self.xml)
