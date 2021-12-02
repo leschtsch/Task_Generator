@@ -32,6 +32,7 @@ class Generator:
         self.status = 'ожидание параметров'
         self.generated = 0
         self.ready = False
+        self.new_params = False
 
     def set_params(self, params):
         for i in params:
@@ -98,4 +99,9 @@ class Generator:
         name = self.__get_save_name()
         els = [Text(desc), List([LatexFormula(i) for i in tasks], style='number'), PageBreak(), Text('Ответы:'),
                List([LatexFormula(i) for i in answers], style='number')]
-        to_docx(els, name)
+        path = to_docx(els, name)
+        if path is not None:
+            self.generated += 1
+
+        self.new_params = True
+        self.needed_params.append(P(name='aboba', type_='text', relative_rect=(20, 372, 100, 20)))

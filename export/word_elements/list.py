@@ -121,7 +121,6 @@ class List:
         num = self.style == 'List Number'
         for i in self.elements:
             p = doc.add_paragraph(style=self.style)
-            p.line_spacing = WD_LINE_SPACING.DOUBLE
             list_number(doc, p, prev, num=num)
             i.insert(doc)
             prev = p

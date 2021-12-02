@@ -19,7 +19,7 @@ class Interface:
         self.__description_font = pygame.font.SysFont('Arial', 25, italic=True)
         self.__note_font = pygame.font.SysFont('Arial', 13, italic=True)
 
-        self.status = ''
+        self.status = description
         self.ready = False
         self.generated = 0
 
@@ -72,6 +72,16 @@ class Interface:
                 elif type_ == 'check_list':
                     answer[i] = self.widgets[i][1].get_multi_selection()
         return answer
+
+    def set_params(self, widget_list: typing.List[P]):
+
+        for i in self.widgets:
+            self.widgets[i][1].kill()
+
+        self.widgets = {}
+        for i in widget_list:
+            self.widgets[i.name] = (i, create_widget(i, self.__manager))
+        self.ready = False
 
     def tick(self):
         self.__generate_button.is_enabled = self.ready

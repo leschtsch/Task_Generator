@@ -2,14 +2,14 @@ import pathlib
 import os
 
 from docx import Document
-from docx.shared import Pt
 from lxml import etree  # чтобы конвертировать MML в OMML
 import latex2mathml.converter  # чтобы конвертировать LaTeX в MMl
 
 
 class LatexFormula:
 
-    def __init__(self, latex: str):
+    def __init__(self, latex: str, space: float = 3.0):
+        self.space = space
         self.latex = latex
         mathml = latex2mathml.converter.convert(self.latex)
         tree = etree.fromstring(mathml)
@@ -21,3 +21,4 @@ class LatexFormula:
     def insert(self, doc: Document):
         doc.paragraphs[-1].add_run(' ')
         doc.paragraphs[-1]._element.append(self.xml)
+        doc.paragraphs[-1].paragraph_format.line_spacing = self.space

@@ -45,13 +45,22 @@ def mainloop(generator):
     # создание интерфейса и задание параметров по умолчанию
     interface = Interface(generator.window_size, generator.needed_params, generator.status)
     for i in generator.needed_params:
-        if i.name in generator.selected_params and (i.type_ == 'text' or i.type_ == 'number'):
+        if i.name in generator.selected_params and i.name in interface.widgets \
+                and (i.type_ == 'text' or i.type_ == 'number'):
             interface.widgets[i.name][1].set_text(generator.selected_params[i.name])
     # создание интерфейса и задание параметров по умолчанию
 
     running = True
     while running:
         time.sleep(0.01)  # иначе курсор ввода текста мерцает
+
+        if generator.new_params:
+            interface.set_params(generator.needed_params)
+            for i in generator.needed_params:
+                if i.name in generator.selected_params and i.name in interface.widgets \
+                        and (i.type_ == 'text' or i.type_ == 'number'):
+                    interface.widgets[i.name][1].set_text(generator.selected_params[i.name])
+            generator.new_params = False
 
         # установка в интерфейс статусов генератора
         interface.status = generator.status
