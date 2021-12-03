@@ -48,8 +48,8 @@ def generate_task(difficulty):
 
 
 def generate(params):
-    difficulty = int(params['difficulty_level'])
-    quantity = int(params['quantity'])
+    difficulty = int(params['1difficulty_level'])
+    quantity = int(params['1quantity'])
     tasks, answers = [], []
 
     for i in range(quantity):

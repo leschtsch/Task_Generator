@@ -32,8 +32,18 @@ def create_widget(gen_param: 'P', manager: 'UIManager'):
             allow_multi_select=True,
         )
 
+    if gen_param.type_ == 'slider':
+        return pygame_gui.elements.UIHorizontalSlider(
+            relative_rect=gen_param.relative_rect,
+            value_range=gen_param.value_range.copy(),
+            start_value=gen_param.value_range[0],
+            manager=manager
+        )
+
     '''
     drop_down_menu
     text_entry_line
     selection_list
+    selection list
+    slider
     '''

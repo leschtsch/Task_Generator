@@ -75,4 +75,5 @@ def get_nums(difficulty):
 
 
 def generate(params):
-    return add_sub_subgenerator.generate(params, get_nums, get_denoms)
+    return add_sub_subgenerator.generate(int(params['3difficulty_level']), int(params['3quantity']), get_nums,
+                                         get_denoms)

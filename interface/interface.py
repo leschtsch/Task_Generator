@@ -43,6 +43,13 @@ class Interface:
                 else:
                     self.widgets[i][1].set_text('0')
 
+    def __check_sliders(self):
+        for i in self.widgets:
+            if self.widgets[i][0].type_ == 'slider':
+                a = self.widgets[i][1]
+                if not a.is_focused and not a.left_button.is_focused and not a.right_button.is_focused:
+                    a.set_current_value(a.get_current_value())
+
     def __draw_labels(self):
         label = self.__description_font.render(self.status, True, (0, 0, 0))
         self.__screen.blit(label, label.get_rect(midtop=(self.__window_size[0] // 2, 30)))
@@ -57,8 +64,12 @@ class Interface:
             self.__screen.blit(label, label.get_rect(bottomleft=self.widgets[i][0].relative_rect.topleft))
 
             if self.widgets[i][1].is_focused:
-                label = self.__note_font.render(' изменения не сохранены', True, (0, 0, 0))
+                label = self.__note_font.render('изменения не сохранены', True, (0, 0, 0))
                 self.__screen.blit(label, label.get_rect(topleft=self.widgets[i][0].relative_rect.topright))
+
+            if self.widgets[i][0].type_ == 'slider':
+                label = self.__note_font.render(str(self.widgets[i][1].get_current_value()), True, (0, 0, 0))
+                self.__screen.blit(label, label.get_rect(topleft=self.widgets[i][0].relative_rect.bottomleft))
 
     def __get_params(self):
         answer = {}
@@ -71,9 +82,12 @@ class Interface:
                     answer[i] = self.widgets[i][1].get_single_selection()
                 elif type_ == 'check_list':
                     answer[i] = self.widgets[i][1].get_multi_selection()
+                elif type_ == 'slider':
+                    answer[i] = self.widgets[i][1].get_current_value()
         return answer
 
     def set_params(self, widget_list: typing.List[P]):
+        params = self.__get_params()
 
         for i in self.widgets:
             self.widgets[i][1].kill()
@@ -82,6 +96,28 @@ class Interface:
         for i in widget_list:
             self.widgets[i.name] = (i, create_widget(i, self.__manager))
         self.ready = False
+
+        for i in params:
+            if i in self.widgets:
+                if self.widgets[i][0].type_ in ['number', 'text']:
+                    self.widgets[i][1].set_text(params[i])
+                elif self.widgets[i][0].type_ == 'radio_list':
+                    sl = self.widgets[i][1]
+                    il = [i['text'] for i in sl.item_list]
+                    event_data = {'user_type': pygame_gui.UI_BUTTON_PRESSED,
+                                  'ui_element': sl.item_list_container.elements[sl.item_list.index(params[i])]}
+                    press_list_item_event = pygame.event.Event(pygame.USEREVENT, event_data)
+                    self.__manager.process_events(press_list_item_event)
+                elif self.widgets[i][0].type_ == 'check_list':
+                    sl = self.widgets[i][1]
+                    il = [i['text'] for i in sl.item_list]
+                    for z in params[i]:
+                        event_data = {'user_type': pygame_gui.UI_BUTTON_PRESSED,
+                                      'ui_element': sl.item_list_container.elements[il.index(z)]}
+                        press_list_item_event = pygame.event.Event(pygame.USEREVENT, event_data)
+                        self.__manager.process_events(press_list_item_event)
+                elif self.widgets[i][0].type_ == 'slider':
+                    self.widgets[i][1].set_current_value(params[i])
 
     def tick(self):
         self.__generate_button.is_enabled = self.ready
@@ -97,7 +133,9 @@ class Interface:
         for i in self.widgets:
             if self.widgets[i][0].type_ == 'check_list' or self.widgets[i][0].type_ == 'radio_list':
                 self.widgets[i][1].unfocus()
+
         self.__check_integers()
+        self.__check_sliders()
         self.__manager.update(0.01)
         self.__screen.fill('#f0f0f0')
         self.__draw_labels()

@@ -73,9 +73,7 @@ def generate_task(difficulty, nums_getter, denoms_getter):
             return task, answer
 
 
-def generate(params, nums_getter, denoms_getter):
-    difficulty = int(params['difficulty_level'])
-    quantity = int(params['quantity'])
+def generate(difficulty, quantity, nums_getter, denoms_getter):
     tasks, answers = [], []
 
     for i in range(quantity):

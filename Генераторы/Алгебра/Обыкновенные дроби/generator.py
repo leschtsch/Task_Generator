@@ -7,26 +7,25 @@ from export.word import to_docx
 
 class Generator:
     def __init__(self):
-        self.window_size = (650, 500)
+        self.window_size = (730, 500)
 
-        self.needed_params = [
-            P(name='task_type', type_='radio_list', relative_rect=(20, 100, 350, 126), description='тип задачи:',
+        self.__always_needed_params = [
+            P(name='task_types', type_='check_list', relative_rect=(20, 100, 350, 126), description='тип задачи:',
               options=[
-                  'Перевод обыкновенные - смешанные',
-                  '+/- с одинаковыми знаменателями',
-                  '+/- с взаимно простыми знаменателями',
-                  '+/- с кратными знаменателями',
-                  '+/- со знаменателями с общим множителем',
-                  '+/- с любыми знаменателями'
-              ]),
-            P(name='difficulty_level', type_='radio_list', relative_rect=(20, 251, 300, 66),
-              description='уровень сложности:',
-              options=['1', '2', '3']),
-            P(name='quantity', type_='number', relative_rect=(20, 342, 100, 20), description='количество заданий:'),
+                  '1. Перевод обыкновенные - смешанные',
+                  '2. +/- с одинаковыми знаменателями',
+                  '3. +/- с взаимно простыми знаменателями',
+                  '4. +/- с кратными знаменателями',
+                  '5. +/- со знаменателями с общим множителем',
+                  '6. +/- с любыми знаменателями'
+              ])
         ]
 
+        self.__selected_themes = []
+
+        self.needed_params = self.__always_needed_params.copy()
+
         self.selected_params = {
-            'quantity': '10'
         }
 
         self.status = 'ожидание параметров'
@@ -35,33 +34,53 @@ class Generator:
         self.new_params = False
 
     def set_params(self, params):
+        themes = {
+            '1. Перевод обыкновенные - смешанные': '1',
+            '2. +/- с одинаковыми знаменателями': '2',
+            '3. +/- с взаимно простыми знаменателями': '3',
+            '4. +/- с кратными знаменателями': '4',
+            '5. +/- со знаменателями с общим множителем': '5',
+            '6. +/- с любыми знаменателями': '6'
+        }
+
         for i in params:
             self.selected_params[i] = params[i]
 
         self.ready = True
         self.status = 'генератор готов к работе'
-        if not self.selected_params['task_type']:
+
+        if set(self.selected_params['task_types']) != set(self.__selected_themes):
+            self.status = 'ожидание параметров'
+            self.new_params = True
+            self.ready = False
+            c = 0
+            self.needed_params = self.__always_needed_params.copy()
+            for i in self.selected_params['task_types']:
+                theme = themes[i]
+                self.needed_params.append(
+                    P(name=theme + 'difficulty_level', type_='slider', relative_rect=(410, 100 + c * 50, 110, 20),
+                      description='уровень сложности %s:' % theme,
+                      value_range=[1, 3]))
+                self.needed_params.append(
+                    P(name=theme + 'quantity', type_='number', relative_rect=(540, 100 + c * 50, 100, 20),
+                      description='количество заданий %s:' % theme))
+                c += 1
+            self.__selected_themes = self.selected_params['task_types'].copy()
+
+        if not self.__selected_themes:
             self.ready = False
             self.status = 'ожидание параметров'
-        if not self.selected_params['difficulty_level']:
-            self.ready = False
-            self.status = 'ожидание параметров'
-        if not self.selected_params['quantity'].isdigit() or int(self.selected_params['quantity']) < 1:
-            self.ready = False
-            self.status = 'количество задач должно быть целым и больше 0'
 
     def __get_save_name(self):
-        theme = {
-            'Перевод обыкновенные - смешанные': 'перевод',
-            '+/- с одинаковыми знаменателями': 'одинак.знам',
-            '+/- с взаимно простыми знаменателями': 'вз.пр.знам.',
-            '+/- с кратными знаменателями': 'кратн.знам',
-            '+/- со знаменателями с общим множителем': 'общ.мн.',
-            '+/- с любыми знаменателями': 'НОД и НОК'
+        themes = {
+            '1. Перевод обыкновенные - смешанные': 'перевод',
+            '2. +/- с одинаковыми знаменателями': 'одинак.знам',
+            '3. +/- с взаимно простыми знаменателями': 'вз.пр.знам.',
+            '4. +/- с кратными знаменателями': 'кратн.знам',
+            '5. +/- со знаменателями с общим множителем': 'общ.мн.',
+            '6. +/- с любыми знаменателями': 'НОД и НОК'
         }
-        return 'Алгебра-об.дроби-%s-%s-%s' % (
-            theme[self.selected_params['task_type']], self.selected_params['difficulty_level'],
-            time.strftime('%d.%m_%H.%M.%S', time.gmtime(time.time())))
+        return 'Алгебра-об.дроби-%s' % time.strftime('%d.%m_%H.%M.%S', time.gmtime(time.time()))
         # TODO: local time
 
     def generate(self):
@@ -69,39 +88,59 @@ class Generator:
             'Переведите обыкновенные дроби в смешанные, а смешанные - в обыкновенные.',
             'Решите примеры.'
         ]
-        desc = ''
-        tasks, answers = [], []
-        if self.selected_params['task_type'] == 'Перевод обыкновенные - смешанные':
+        tels, aels = [], []
+        tasknum = 1
+        if '1. Перевод обыкновенные - смешанные' in self.selected_params['task_types']:
             import subgenerator1
-            desc = descs[0]
+            task = str(tasknum) + '. ' + descs[0]
+            ans = str(tasknum) + '. ' + 'Ответы.'
+            tasknum += 1
             tasks, answers = subgenerator1.generate(self.selected_params)
-        elif self.selected_params['task_type'] == '+/- с одинаковыми знаменателями':
+            tels.extend([Text(task), List([LatexFormula(i) for i in tasks], style='number')])
+            aels.extend([Text(ans), List([LatexFormula(i) for i in answers], style='number')])
+        if '2. +/- с одинаковыми знаменателями' in self.selected_params['task_types']:
             import subgenerator2
-            desc = descs[1]
+            task = str(tasknum) + '. ' + descs[1]
+            ans = str(tasknum) + '. ' + 'Ответы.'
+            tasknum += 1
             tasks, answers = subgenerator2.generate(self.selected_params)
-        elif self.selected_params['task_type'] == '+/- с взаимно простыми знаменателями':
+            tels.extend([Text(task), List([LatexFormula(i) for i in tasks], style='number')])
+            aels.extend([Text(ans), List([LatexFormula(i) for i in answers], style='number')])
+        if '3. +/- с взаимно простыми знаменателями' in self.selected_params['task_types']:
             import subgenerator3
-            desc = descs[1]
+            task = str(tasknum) + '. ' + descs[1]
+            ans = str(tasknum) + '. ' + 'Ответы.'
+            tasknum += 1
             tasks, answers = subgenerator3.generate(self.selected_params)
-        elif self.selected_params['task_type'] == '+/- с кратными знаменателями':
+            tels.extend([Text(task), List([LatexFormula(i) for i in tasks], style='number')])
+            aels.extend([Text(ans), List([LatexFormula(i) for i in answers], style='number')])
+        if '4. +/- с кратными знаменателями' in self.selected_params['task_types']:
             import subgenerator4
-            desc = descs[1]
+            task = str(tasknum) + '. ' + descs[1]
+            ans = str(tasknum) + '. ' + 'Ответы.'
+            tasknum += 1
             tasks, answers = subgenerator4.generate(self.selected_params)
-        elif self.selected_params['task_type'] == '+/- со знаменателями с общим множителем':
+            tels.extend([Text(task), List([LatexFormula(i) for i in tasks], style='number')])
+            aels.extend([Text(ans), List([LatexFormula(i) for i in answers], style='number')])
+        if '5. +/- со знаменателями с общим множителем' in self.selected_params['task_types']:
             import subgenerator5
-            desc = descs[1]
+            task = str(tasknum) + '. ' + descs[1]
+            ans = str(tasknum) + '. ' + 'Ответы.'
+            tasknum += 1
             tasks, answers = subgenerator5.generate(self.selected_params)
-        elif self.selected_params['task_type'] == '+/- с любыми знаменателями':
+            tels.extend([Text(task), List([LatexFormula(i) for i in tasks], style='number')])
+            aels.extend([Text(ans), List([LatexFormula(i) for i in answers], style='number')])
+        if '6. +/- с любыми знаменателями' in self.selected_params['task_types']:
             import subgenerator6
-            desc = descs[1]
+            task = str(tasknum) + '. ' + descs[1]
+            ans = str(tasknum) + '. ' + 'Ответы.'
+            tasknum += 1
             tasks, answers = subgenerator6.generate(self.selected_params)
+            tels.extend([Text(task), List([LatexFormula(i) for i in tasks], style='number')])
+            aels.extend([Text(ans), List([LatexFormula(i) for i in answers], style='number')])
 
         name = self.__get_save_name()
-        els = [Text(desc), List([LatexFormula(i) for i in tasks], style='number'), PageBreak(), Text('Ответы:'),
-               List([LatexFormula(i) for i in answers], style='number')]
+        els = [*tels, PageBreak(), *aels]
         path = to_docx(els, name)
         if path is not None:
             self.generated += 1
-
-        self.new_params = True
-        self.needed_params.append(P(name='aboba', type_='text', relative_rect=(20, 372, 100, 20)))
