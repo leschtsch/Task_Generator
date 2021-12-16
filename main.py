@@ -53,7 +53,6 @@ def mainloop(generator):
     running = True
     while running:
         time.sleep(0.01)  # иначе курсор ввода текста мерцает
-
         if generator.new_params:
             interface.set_params(generator.needed_params)
             for i in generator.needed_params:

@@ -111,7 +111,7 @@ class List:
             return 'List Number'
         return 'List Bullet'
 
-    def __init__(self, elements, style='Bullet'):
+    def __init__(self, elements, style='bullet'):
         self.elements = elements
         self.style = style
         self.style = self.__get_style()

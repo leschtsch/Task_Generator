@@ -58,12 +58,12 @@ class Generator:
             for i in self.selected_params['task_types']:
                 theme = themes[i]
                 self.needed_params.append(
-                    P(name=theme + 'difficulty_level', type_='slider', relative_rect=(410, 100 + c * 50, 110, 20),
-                      description='уровень сложности %s:' % theme,
+                    P(name=theme + 'difficulty_level', type_='slider', relative_rect=(410, 100 + c * 55, 110, 20),
+                      description='%s. уровень сложности:' % theme,
                       value_range=[1, 3]))
                 self.needed_params.append(
-                    P(name=theme + 'quantity', type_='number', relative_rect=(540, 100 + c * 50, 100, 20),
-                      description='количество заданий %s:' % theme))
+                    P(name=theme + 'quantity', type_='number', relative_rect=(560, 100 + c * 55, 100, 20),
+                      description='%s. количество заданий:' % theme))
                 c += 1
             self.__selected_themes = self.selected_params['task_types'].copy()
 
