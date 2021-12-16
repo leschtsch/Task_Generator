@@ -25,8 +25,7 @@ class Generator:
 
         self.needed_params = self.__always_needed_params.copy()
 
-        self.selected_params = {
-        }
+        self.selected_params = {}
 
         self.status = 'ожидание параметров'
         self.generated = 0
