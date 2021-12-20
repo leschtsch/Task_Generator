@@ -2,6 +2,7 @@
 Данный модуль нужен, чтобы установить нужные модули, если их нет.
 """
 
+import sys
 import subprocess
 import pkg_resources
 from tkinter import *
@@ -25,7 +26,7 @@ def install_missing():
 
     root = Tk()  # предупреждение о болгой установке
     root.withdraw()
-    messagebox.showinfo('', 'Первый запуск может быть долгим.\nНажмите ОК')
+    messagebox.showinfo('', 'Запуск может быть долгим.\nНажмите ОК')
 
     '''
     установка модулей
