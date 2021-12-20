@@ -2,9 +2,10 @@
 Данный модуль нужен, чтобы установить нужные модули, если их нет.
 """
 
-import sys
 import subprocess
 import pkg_resources
+from tkinter import *
+from tkinter import messagebox
 
 
 def install_missing():
@@ -12,6 +13,7 @@ def install_missing():
     Данная функция устанавливает необходимые модули
     :return: None
     """
+
     # получение множества недостающих модулей
     required = {'pygame', 'pygame-gui', 'python-docx', 'lxml', 'easygui', 'latex2mathml'}
     installed = {pkg.key for pkg in pkg_resources.working_set}
@@ -21,9 +23,13 @@ def install_missing():
     if not missing:  # проверка, надо ли что-то устанавливать
         return
 
+    root = Tk()  # предупреждение о болгой установке
+    root.withdraw()
+    messagebox.showinfo('', 'Первый запуск может быть долгим.\nНажмите ОК')
+
     '''
     установка модулей
-    Я написал четыре варианта, потому что не знаю,
+    Я написал три варианта, потому что не знаю,
     что из этого на каком компьютере сработает.
     В коде со StackOverFlow был check_call, но он устарел
     '''
