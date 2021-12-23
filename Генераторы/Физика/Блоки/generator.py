@@ -77,3 +77,4 @@ class Generator:
                 ]))
                 answers.append(Text(str(v2 + 2 * v) + ' м/с'))
         to_docx([List(tasks, style='number'), PageBreak(), List(answers, style='number')], default='Блоки')
+        self.generated += 1

@@ -24,8 +24,7 @@ def setup():
     if not missing:  # проверка, надо ли что-то устанавливать
         return True
 
-    messagebox.showerror('установка', 'ошибка установки')
-    root = Tk()  # предупреждение о болгой установке
+    root = Tk()  # предупреждение о долгой установке
     root.withdraw()
     ok = messagebox.askyesno(title='установка',
                              message='''На компьютере нет некоторых модулей. Вы готовы начать установку?
@@ -60,4 +59,3 @@ def setup():
     messagebox.showerror('установка', 'ошибка установки')
     return False
     # установка модулей
-
