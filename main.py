@@ -6,8 +6,11 @@ import sys
 import os.path
 import time
 
-import setup
-from easygui import fileopenbox, filesavebox  # чтобы открыть генератор и сохранить задачи
+from setup import setup
+
+ok = setup()
+if ok:
+    from easygui import fileopenbox, filesavebox  # чтобы открыть генератор и сохранить задачи
 
 from interface import *
 
@@ -80,4 +83,5 @@ def mainloop(generator):
             break
 
 
-mainloop(generator_load())
+if ok:
+    mainloop(generator_load())
