@@ -8,11 +8,12 @@ import time
 
 from setup import setup
 
-ok = setup()
-if ok:
+installed = setup()
+if installed:
     from easygui import fileopenbox, filesavebox  # чтобы открыть генератор и сохранить задачи
 
 from interface import *
+from export.word import *
 
 
 def generator_load():
@@ -46,7 +47,7 @@ def mainloop(generator):
         return
 
     # создание интерфейса и задание параметров по умолчанию
-    interface = Interface(generator.window_size, generator.needed_params, generator.status)
+    interface = Interface(generator.needed_params, generator.status)
     for i in generator.needed_params:
         if i.name in generator.selected_params and i.name in interface.widgets \
                 and (i.type_ == 'text' or i.type_ == 'number'):
@@ -75,7 +76,9 @@ def mainloop(generator):
         elif params == 'Generate':
             interface.status = 'генерация задач'
             interface.tick()
-            generator.generate()
+            tasks, answers = generator.generate()
+            if to_docx([*tasks, PageBreak(), *answers], 'работа'):
+                generator.generated += 1
             interface.status = generator.status
             interface.generated = generator.generated
             interface.tick()
@@ -83,5 +86,5 @@ def mainloop(generator):
             break
 
 
-if ok:
+if installed:
     mainloop(generator_load())

@@ -7,9 +7,9 @@ import re
 
 
 class Interface:
-    def __init__(self, window_size, widget_list: typing.List[P], description=''):
+    def __init__(self, widget_list: typing.List[P], description=''):
         pygame.init()
-        self.__window_size = window_size
+        self.__window_size = (800, 600)
         self.__screen = pygame.display.set_mode(self.__window_size)
         self.__screen.fill('#f0f0f0')
         self.__manager = pygame_gui.ui_manager.UIManager(self.__window_size)

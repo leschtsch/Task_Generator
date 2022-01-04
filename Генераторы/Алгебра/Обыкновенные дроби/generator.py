@@ -139,7 +139,8 @@ class Generator:
             aels.extend([Text(ans), List([LatexFormula(i) for i in answers], style='number')])
 
         name = self.__get_save_name()
-        els = [*tels, PageBreak(), *aels]
-        path = to_docx(els, name)
-        if path is not None:
-            self.generated += 1
+        # els = [*tels, PageBreak(), *aels]
+        # path = to_docx(els, name)
+        # if path is not None:
+        #     self.generated += 1
+        return tels, aels
