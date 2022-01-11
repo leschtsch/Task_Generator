@@ -3,12 +3,12 @@ import time
 from interface import GeneratorParameter as P
 from export.word_elements import *
 from export.word import to_docx
-import subgenerator1
-import subgenerator2
-import subgenerator3
-import subgenerator4
-import subgenerator5
-import subgenerator6
+import subgenerator1_1
+import subgenerator2_1
+import subgenerator3_1
+import subgenerator4_1
+import subgenerator5_1
+import subgenerator6_1
 
 
 class Generator:
@@ -100,42 +100,42 @@ class Generator:
             task = str(tasknum) + '. ' + descs[0]
             ans = str(tasknum) + '. ' + 'Ответы.'
             tasknum += 1
-            tasks, answers = subgenerator1.generate(self.selected_params)
+            tasks, answers = subgenerator1_1.generate(self.selected_params)
             tels.extend([Text(task), List([LatexFormula(i) for i in tasks], style='number')])
             aels.extend([Text(ans), List([LatexFormula(i) for i in answers], style='number')])
         if '2. +/- с одинаковыми знаменателями' in self.selected_params['task_types']:
             task = str(tasknum) + '. ' + descs[1]
             ans = str(tasknum) + '. ' + 'Ответы.'
             tasknum += 1
-            tasks, answers = subgenerator2.generate(self.selected_params)
+            tasks, answers = subgenerator2_1.generate(self.selected_params)
             tels.extend([Text(task), List([LatexFormula(i) for i in tasks], style='number')])
             aels.extend([Text(ans), List([LatexFormula(i) for i in answers], style='number')])
         if '3. +/- с взаимно простыми знаменателями' in self.selected_params['task_types']:
             task = str(tasknum) + '. ' + descs[1]
             ans = str(tasknum) + '. ' + 'Ответы.'
             tasknum += 1
-            tasks, answers = subgenerator3.generate(self.selected_params)
+            tasks, answers = subgenerator3_1.generate(self.selected_params)
             tels.extend([Text(task), List([LatexFormula(i) for i in tasks], style='number')])
             aels.extend([Text(ans), List([LatexFormula(i) for i in answers], style='number')])
         if '4. +/- с кратными знаменателями' in self.selected_params['task_types']:
             task = str(tasknum) + '. ' + descs[1]
             ans = str(tasknum) + '. ' + 'Ответы.'
             tasknum += 1
-            tasks, answers = subgenerator4.generate(self.selected_params)
+            tasks, answers = subgenerator4_1.generate(self.selected_params)
             tels.extend([Text(task), List([LatexFormula(i) for i in tasks], style='number')])
             aels.extend([Text(ans), List([LatexFormula(i) for i in answers], style='number')])
         if '5. +/- со знаменателями с общим множителем' in self.selected_params['task_types']:
             task = str(tasknum) + '. ' + descs[1]
             ans = str(tasknum) + '. ' + 'Ответы.'
             tasknum += 1
-            tasks, answers = subgenerator5.generate(self.selected_params)
+            tasks, answers = subgenerator5_1.generate(self.selected_params)
             tels.extend([Text(task), List([LatexFormula(i) for i in tasks], style='number')])
             aels.extend([Text(ans), List([LatexFormula(i) for i in answers], style='number')])
         if '6. +/- с любыми знаменателями' in self.selected_params['task_types']:
             task = str(tasknum) + '. ' + descs[1]
             ans = str(tasknum) + '. ' + 'Ответы.'
             tasknum += 1
-            tasks, answers = subgenerator6.generate(self.selected_params)
+            tasks, answers = subgenerator6_1.generate(self.selected_params)
             tels.extend([Text(task), List([LatexFormula(i) for i in tasks], style='number')])
             aels.extend([Text(ans), List([LatexFormula(i) for i in answers], style='number')])
 

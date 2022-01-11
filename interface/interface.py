@@ -25,7 +25,7 @@ class Interface:
         self.__description_font = pygame.font.SysFont('Arial', 25, italic=True)
         self.__note_font = pygame.font.SysFont('Arial', 13, italic=True)
 
-        self.___status = description
+        self.__status = description
         self.__ready = False
         self.__generated = 0
 
@@ -77,7 +77,6 @@ class Interface:
         if gen_name not in self.__generators:
             sys.path.append(generator_path[0])  # вставка пути чтобы сработал импорт
             sys.path.append(os.path.join(generator_path[0], 'subgenerators'))
-            print(sys.path)
 
             generator = __import__(generator_path[1])  # импорт
             generator = generator.Generator()
@@ -89,7 +88,19 @@ class Interface:
             sys.path.remove(generator_path[0])  # удаление пути чтобы не засорять этот список
             sys.path.remove(os.path.join(generator_path[0], 'subgenerators'))
 
-    # TODO: generator_delete
+    def __generator_delete(self):
+        name = self.__generators_selection_list.get_single_selection()
+        if name is None:
+            return
+
+        il = self.__generators_selection_list.item_list
+        il = [i['text'] for i in il]
+        il.remove(name)
+        self.__generators_selection_list.set_item_list(il)
+
+        del self.__generators[name]
+        self.__current_generator = None
+        self.__set_params()
 
     def __check_integers(self):
         for i in self.__widgets:
@@ -112,7 +123,7 @@ class Interface:
     def __draw(self):
         self.__screen.fill('#f0f0f0')
 
-        label = self.__description_font.render(self.___status, True, (0, 0, 0))
+        label = self.__description_font.render(self.__status, True, (0, 0, 0))
         self.__screen.blit(label, label.get_rect(midtop=(400, 30)))
 
         label = self.__note_font.render('задания сохранены %d раз(а)' % self.__generated, True, (0, 0, 0))
@@ -153,15 +164,16 @@ class Interface:
                     answer[i] = self.__widgets[i][1].get_current_value()
         return answer
 
-    def __set_params(self, widget_list: typing.List[P]):
+    def __set_params(self, widget_list: typing.List[P] = None, default=None):
         params = self.__get_params()
 
         for i in self.__widgets:
             self.__widgets[i][1].kill()
 
         self.__widgets = {}
-        for i in widget_list:
-            self.__widgets[i.name] = (i, create_widget(i, self.__manager))
+        if widget_list is not None:
+            for i in widget_list:
+                self.__widgets[i.name] = (i, create_widget(i, self.__manager))
         self.__ready = False
 
         for i in params:
@@ -178,19 +190,47 @@ class Interface:
                 elif self.__widgets[i][0].type_ == 'check_list':
                     sl = self.__widgets[i][1]
                     il = [i['text'] for i in sl.item_list]
-                    for z in params[i]:
+                    for j in params[i]:
                         event_data = {'user_type': pygame_gui.UI_BUTTON_PRESSED,
-                                      'ui_element': sl.item_list_container.elements[il.index(z)]}
+                                      'ui_element': sl.item_list_container.elements[il.index(j)]}
                         press_list_item_event = pygame.event.Event(pygame.USEREVENT, event_data)
                         self.__manager.process_events(press_list_item_event)
                 elif self.__widgets[i][0].type_ == 'slider':
                     self.__widgets[i][1].set_current_value(params[i])
 
+        if default is not None:
+            for i in default:
+                if i in self.__widgets and i not in params:
+                    if self.__widgets[i][0].type_ in ['number', 'text']:
+                        self.__widgets[i][1].set_text(default[i])
+                    elif self.__widgets[i][0].type_ == 'radio_list':
+                        sl = self.__widgets[i][1]
+                        il = [i['text'] for i in sl.item_list]
+                        event_data = {'user_type': pygame_gui.UI_BUTTON_PRESSED,
+                                      'ui_element': sl.item_list_container.elements[sl.item_list.index(default[i])]}
+                        press_list_item_event = pygame.event.Event(pygame.USEREVENT, event_data)
+                        self.__manager.process_events(press_list_item_event)
+                    elif self.__widgets[i][0].type_ == 'check_list':
+                        sl = self.__widgets[i][1]
+                        il = [i['text'] for i in sl.item_list]
+                        for j in default[i]:
+                            event_data = {'user_type': pygame_gui.UI_BUTTON_PRESSED,
+                                          'ui_element': sl.item_list_container.elements[il.index(j)]}
+                            press_list_item_event = pygame.event.Event(pygame.USEREVENT, event_data)
+                            self.__manager.process_events(press_list_item_event)
+                    elif self.__widgets[i][0].type_ == 'slider':
+                        self.__widgets[i][1].set_current_value(default[i])
+
     def tick(self):
         if self.__current_generator is not None and self.__current_generator.new_params:
-            self.__set_params(self.__current_generator.needed_params)
+            self.__set_params(self.__current_generator.needed_params, self.__current_generator.selected_params)
             self.__current_generator.new_params = False
+        if self.__current_generator is not None:
+            self.__status = self.__current_generator.status
+        else:
+            self.__status = 'откройте генераторы'
         self.__generate_button.is_enabled = self.__ready
+        self.__delete_gen_button.is_enabled = self.__current_generator is not None
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return False
@@ -200,10 +240,13 @@ class Interface:
                         return 'Generate'
                     elif event.ui_element == self.__add_gen_button:
                         self.__generator_load()
+                    elif event.ui_element == self.__delete_gen_button:
+                        self.__generator_delete()
                 elif event.user_type == pygame_gui.UI_SELECTION_LIST_NEW_SELECTION:
                     if event.ui_element == self.__generators_selection_list:
                         self.__current_generator = self.__generators[event.text]
-                        self.__set_params(self.__current_generator.needed_params)
+                        self.__set_params(self.__current_generator.needed_params,
+                                          self.__current_generator.selected_params)
             self.__manager.process_events(event)
 
         for i in self.__widgets:
