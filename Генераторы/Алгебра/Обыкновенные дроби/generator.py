@@ -3,10 +3,17 @@ import time
 from interface import GeneratorParameter as P
 from export.word_elements import *
 from export.word import to_docx
+import subgenerator1
+import subgenerator2
+import subgenerator3
+import subgenerator4
+import subgenerator5
+import subgenerator6
 
 
 class Generator:
     def __init__(self):
+        self.name = 'Алгебра Обыкновенные Дроби'
         self.window_size = (730, 500)
 
         self.__always_needed_params = [
@@ -90,7 +97,6 @@ class Generator:
         tels, aels = [], []
         tasknum = 1
         if '1. Перевод обыкновенные - смешанные' in self.selected_params['task_types']:
-            import subgenerator1
             task = str(tasknum) + '. ' + descs[0]
             ans = str(tasknum) + '. ' + 'Ответы.'
             tasknum += 1
@@ -98,7 +104,6 @@ class Generator:
             tels.extend([Text(task), List([LatexFormula(i) for i in tasks], style='number')])
             aels.extend([Text(ans), List([LatexFormula(i) for i in answers], style='number')])
         if '2. +/- с одинаковыми знаменателями' in self.selected_params['task_types']:
-            import subgenerator2
             task = str(tasknum) + '. ' + descs[1]
             ans = str(tasknum) + '. ' + 'Ответы.'
             tasknum += 1
@@ -106,7 +111,6 @@ class Generator:
             tels.extend([Text(task), List([LatexFormula(i) for i in tasks], style='number')])
             aels.extend([Text(ans), List([LatexFormula(i) for i in answers], style='number')])
         if '3. +/- с взаимно простыми знаменателями' in self.selected_params['task_types']:
-            import subgenerator3
             task = str(tasknum) + '. ' + descs[1]
             ans = str(tasknum) + '. ' + 'Ответы.'
             tasknum += 1
@@ -114,7 +118,6 @@ class Generator:
             tels.extend([Text(task), List([LatexFormula(i) for i in tasks], style='number')])
             aels.extend([Text(ans), List([LatexFormula(i) for i in answers], style='number')])
         if '4. +/- с кратными знаменателями' in self.selected_params['task_types']:
-            import subgenerator4
             task = str(tasknum) + '. ' + descs[1]
             ans = str(tasknum) + '. ' + 'Ответы.'
             tasknum += 1
@@ -122,7 +125,6 @@ class Generator:
             tels.extend([Text(task), List([LatexFormula(i) for i in tasks], style='number')])
             aels.extend([Text(ans), List([LatexFormula(i) for i in answers], style='number')])
         if '5. +/- со знаменателями с общим множителем' in self.selected_params['task_types']:
-            import subgenerator5
             task = str(tasknum) + '. ' + descs[1]
             ans = str(tasknum) + '. ' + 'Ответы.'
             tasknum += 1
@@ -130,7 +132,6 @@ class Generator:
             tels.extend([Text(task), List([LatexFormula(i) for i in tasks], style='number')])
             aels.extend([Text(ans), List([LatexFormula(i) for i in answers], style='number')])
         if '6. +/- с любыми знаменателями' in self.selected_params['task_types']:
-            import subgenerator6
             task = str(tasknum) + '. ' + descs[1]
             ans = str(tasknum) + '. ' + 'Ответы.'
             tasknum += 1

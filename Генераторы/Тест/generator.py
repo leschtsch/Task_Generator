@@ -7,6 +7,8 @@ from export.word import to_docx
 
 class Generator:
     def __init__(self):
+        self.name = 'Тест'
+
         self.window_size = (700, 500)
 
         self.needed_params = []

@@ -9,6 +9,8 @@ from export.word import to_docx
 
 class Generator:
     def __init__(self):
+        self.name = 'Физика Блоки'
+
         self.window_size = (650, 500)
 
         self.needed_params = [
