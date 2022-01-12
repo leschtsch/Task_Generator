@@ -32,7 +32,16 @@ def mainloop():
         if isinstance(params, dict):
             pass
         elif params == 'Generate':
-            pass
+            tasks, answers = [], []
+            for i in interface.generators:
+                tasks.append(Text(i))
+                answers.append(Text(i))
+                gen = interface.generators[i]
+                task, answer = gen.generate()
+                tasks.extend(task)
+                answers.extend(answer)
+            if to_docx([*tasks, PageBreak(), Text('Ответы'), *answers]):
+                interface.generated += 1
         else:
             break
 

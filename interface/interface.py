@@ -27,7 +27,7 @@ class Interface:
 
         self.__status = description
         self.__ready = False
-        self.__generated = 0
+        self.generated = 0
 
         self.__widgets = {}
 
@@ -54,7 +54,7 @@ class Interface:
             text='Удалить выбранный генератор'
         )
 
-        self.__generators = {}
+        self.generators = {}
         self.__current_generator = None
 
     def __generator_load(self):
@@ -74,13 +74,13 @@ class Interface:
         gen_name = generator_path[0].split('Генераторы')[1]
         gen_name = re.sub(r'\\', ' ', gen_name)
 
-        if gen_name not in self.__generators:
+        if gen_name not in self.generators:
             sys.path.append(generator_path[0])  # вставка пути чтобы сработал импорт
             sys.path.append(os.path.join(generator_path[0], 'subgenerators'))
 
             generator = __import__(generator_path[1])  # импорт
             generator = generator.Generator()
-            self.__generators[gen_name] = generator
+            self.generators[gen_name] = generator
             self.__generators_selection_list.set_item_list(
                 [i['text'] for i in self.__generators_selection_list.item_list] + [gen_name]
             )
@@ -98,7 +98,7 @@ class Interface:
         il.remove(name)
         self.__generators_selection_list.set_item_list(il)
 
-        del self.__generators[name]
+        del self.generators[name]
         self.__current_generator = None
         self.__set_params()
 
@@ -126,7 +126,7 @@ class Interface:
         label = self.__description_font.render(self.__status, True, (0, 0, 0))
         self.__screen.blit(label, label.get_rect(midtop=(400, 30)))
 
-        label = self.__note_font.render('задания сохранены %d раз(а)' % self.__generated, True, (0, 0, 0))
+        label = self.__note_font.render('задания сохранены %d раз(а)' % self.generated, True, (0, 0, 0))
         self.__screen.blit(label, label.get_rect(topleft=(570, 550)))
 
         for i in self.__widgets:
@@ -229,6 +229,7 @@ class Interface:
             self.__status = self.__current_generator.status
         else:
             self.__status = 'откройте генераторы'
+        self.__ready = all([self.generators[i].ready for i in self.generators]) and self.generators
         self.__generate_button.is_enabled = self.__ready
         self.__delete_gen_button.is_enabled = self.__current_generator is not None
         for event in pygame.event.get():
@@ -244,7 +245,7 @@ class Interface:
                         self.__generator_delete()
                 elif event.user_type == pygame_gui.UI_SELECTION_LIST_NEW_SELECTION:
                     if event.ui_element == self.__generators_selection_list:
-                        self.__current_generator = self.__generators[event.text]
+                        self.__current_generator = self.generators[event.text]
                         self.__set_params(self.__current_generator.needed_params,
                                           self.__current_generator.selected_params)
             self.__manager.process_events(event)
