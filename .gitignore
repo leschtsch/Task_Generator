@@ -1,0 +1,9 @@
+/.idea
+/__pycache__
+/venv
+/Documentation
+/Примеры задач
+/Примеры задач.zip
+**/*.docx
+/test.py
+general_todos.py
