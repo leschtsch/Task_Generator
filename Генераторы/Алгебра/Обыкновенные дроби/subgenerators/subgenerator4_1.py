@@ -1,6 +1,6 @@
 from random import randint, choice
 
-import add_sub_subgenerator
+import add_sub_subgenerator_1
 
 
 def get_denoms(difficulty):
@@ -28,5 +28,5 @@ def get_nums(difficulty):
 
 
 def generate(params):
-    return add_sub_subgenerator.generate(int(params['4difficulty_level']), int(params['4quantity']), get_nums,
+    return add_sub_subgenerator_1.generate(int(params['4difficulty_level']), int(params['4quantity']), get_nums,
                                          get_denoms)

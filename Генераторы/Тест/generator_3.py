@@ -7,6 +7,8 @@ from export.word import to_docx
 
 class Generator:
     def __init__(self):
+        self.name = 'Тест'
+
         self.window_size = (700, 500)
 
         self.needed_params = []
@@ -21,14 +23,13 @@ class Generator:
         pass
 
     def generate(self):
-        els = [
+        tels = [
             List([Text('тест'),
                   LatexFormula('x^2=0', space=1),
                   Picture(getcwd() + '\\Генераторы\\Тест\\subgenerators\\coh.png', width=5)], style='number'),
-            Picture(getcwd() + '\\Генераторы\\Тест\\subgenerators\\coh.png', width=10),
-            PageBreak(),
+            Picture(getcwd() + '\\Генераторы\\Тест\\subgenerators\\coh.png', width=10)]
+        aels = [
             Sentence([Text('тест '),
                       Picture(getcwd() + '\\Генераторы\\Тест\\subgenerators\\coh.png', width=1, inline=True),
-                      Text(' '), LatexFormula('x^2=0', space=1)])
-        ]
-        to_docx(els, 'тест')
+                      Text(' '), LatexFormula('x^2=0', space=1)])]
+        return tels, aels

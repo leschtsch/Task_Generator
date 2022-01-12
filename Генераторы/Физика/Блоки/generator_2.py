@@ -9,6 +9,8 @@ from export.word import to_docx
 
 class Generator:
     def __init__(self):
+        self.name = 'Физика Блоки'
+
         self.window_size = (650, 500)
 
         self.needed_params = [
@@ -76,6 +78,8 @@ class Generator:
                     Picture(getcwd() + '\\Генераторы\\Физика\\Блоки\\subgenerators\\3.png', width=5, inline=True)
                 ]))
                 answers.append(Text(str(v2 + 2 * v) + ' м/с'))
-        if to_docx([List(tasks, style='number'), PageBreak(), List(answers, style='number')],
-                   default='Блоки') is not None:
-            self.generated += 1
+
+        return [List(tasks, style='number')], [List(answers, style='number')]
+        # if to_docx([List(tasks, style='number'), PageBreak(), List(answers, style='number')],
+        #            default='Блоки') is not None:
+        #     self.generated += 1

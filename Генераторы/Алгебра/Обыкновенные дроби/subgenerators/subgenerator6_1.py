@@ -1,7 +1,7 @@
 from random import randint, choice
 from helpful import primes
 
-import add_sub_subgenerator
+import add_sub_subgenerator_1
 
 
 def get_nums(difficulty):
@@ -92,5 +92,5 @@ def get_denoms(difficulty):
 
 
 def generate(params):
-    return add_sub_subgenerator.generate(int(params['6difficulty_level']), int(params['6quantity']), get_nums,
+    return add_sub_subgenerator_1.generate(int(params['6difficulty_level']), int(params['6quantity']), get_nums,
                                          get_denoms)

@@ -6,7 +6,7 @@ from easygui import filesavebox
 from export.word_elements import *
 
 
-def to_docx(elements, default='test'):
+def to_docx(elements, default='Работа'):
     path = filesavebox(msg='сохранение файла', default=default)
     if not path:
         return
