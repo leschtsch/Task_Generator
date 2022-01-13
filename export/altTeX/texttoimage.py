@@ -1,5 +1,5 @@
 import pygame
-import alttex
+from export.altTeX import alttex
 import codecs
 
 def get_brack(text, i):  # Поиск закрывающей скобки в тексте по позиции открывающей скобки
