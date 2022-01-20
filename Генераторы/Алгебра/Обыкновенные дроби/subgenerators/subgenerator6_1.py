@@ -1,5 +1,5 @@
 from random import randint, choice
-from helpful import primes
+from helpful_1 import primes
 
 import add_sub_subgenerator_1
 

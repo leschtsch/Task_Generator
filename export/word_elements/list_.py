@@ -104,6 +104,10 @@ def list_number(doc, par, prev=None, level=None, num=True):
 
 
 class List:
+    """
+    Класс, позволяющий вставлять в docx списки из элементов.
+    """
+
     def __get_style(self):
         if 'bullet' in self.style.lower():
             return 'List Bullet'
@@ -111,12 +115,20 @@ class List:
             return 'List Number'
         return 'List Bullet'
 
-    def __init__(self, elements, style='bullet'):
+    def __init__(self, elements: list, style: str = 'bullet'):
+        """
+        :param elements: список элементов списка.
+        :param style: стиль списка. number - нумерованный. bullet - ненумерованный.
+        """
         self.elements = elements
         self.style = style
         self.style = self.__get_style()
 
     def insert(self, doc):
+        """
+        Функция, вставляющая список в документ.
+        :param doc: python_docx Document, в который нужно вставить список.
+        """
         prev = None
         num = self.style == 'List Number'
         for i in self.elements:

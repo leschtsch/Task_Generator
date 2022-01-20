@@ -39,11 +39,3 @@ def create_widget(gen_param: 'P', manager: 'UIManager'):
             start_value=gen_param.value_range[0],
             manager=manager
         )
-
-    '''
-    drop_down_menu
-    text_entry_line
-    selection_list
-    selection list
-    slider
-    '''
