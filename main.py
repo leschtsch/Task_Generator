@@ -4,6 +4,7 @@
 
 import sys
 import os.path
+import os
 import time
 
 from setup import setup
@@ -48,3 +49,5 @@ def mainloop():
 
 if installed:
     mainloop()
+    for i in os.listdir('./temp_img'):
+        os.remove('./temp_img//'+i)

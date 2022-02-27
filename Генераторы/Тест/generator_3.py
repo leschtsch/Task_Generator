@@ -4,6 +4,9 @@ from interface import GeneratorParameter as P
 from export.word_elements import *
 from export.word import to_docx
 
+import pygame
+from export.altTeX import alttex
+
 
 class Generator:
     def __init__(self):
@@ -27,7 +30,8 @@ class Generator:
             List([Text('тест'),
                   LatexFormula('x^2=0', space=1),
                   Picture(getcwd() + '\\Генераторы\\Тест\\subgenerators\\coh.png', width=5)], style='number'),
-            Picture(getcwd() + '\\Генераторы\\Тест\\subgenerators\\coh.png', width=10)]
+            Picture(getcwd() + '\\Генераторы\\Тест\\subgenerators\\coh.png', width=10),
+        AlttexFormula('sqrt(t(abc))')]
         aels = [
             Sentence([Text('тест '),
                       Picture(getcwd() + '\\Генераторы\\Тест\\subgenerators\\coh.png', width=1, inline=True),

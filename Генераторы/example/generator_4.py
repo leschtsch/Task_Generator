@@ -2,7 +2,6 @@ from interface import GeneratorParameter as GenP  # параметры гене�
 from export.word_elements import *  # элементы экспорта
 import random
 
-
 class Generator:
     def __init__(self):
         self.status = 'Здесь пока ничего нет'
@@ -43,6 +42,8 @@ class Generator:
             c = a + b
             tasks.append(LatexFormula('%d + %d' % (a, b)))
             answers.append(LatexFormula('%d + %d = %d' % (a, b, c)))
+
+
         return [
                    Text('Решите примеры:'),
                    List(elements=tasks, style='number')

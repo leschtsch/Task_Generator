@@ -2,11 +2,13 @@ import pygame
 from export.altTeX import alttex
 import codecs
 
+
 def get_brack(text, i):  # Поиск закрывающей скобки в тексте по позиции открывающей скобки
     j = text[i:].find('}')
     return i, i + j
 
-def text_to_image(text, page_size=[1240, 1754], content_size = [1220, 1734]):  # Рендерер текста в массив изображений
+
+def text_to_image(text, page_size=[1240, 1754], content_size=[1220, 1734]):  # Рендерер текста в массив изображений
     font_size = 30
     font_name = 'Calibri'
     bold = False
@@ -20,7 +22,7 @@ def text_to_image(text, page_size=[1240, 1754], content_size = [1220, 1734]):  #
     text = text.replace('\\{nextpage}', '\\{nextpаge}')
     pages = text.split('{nextpage}')  # Разрезание текста на страницы
     names = []
-    #print(pages)
+    # print(pages)
     for pnum, page in enumerate(pages):  # Проход по всем страницам
         lines = page.split('\n')  # Раздел страницы на строки
         PAGE = pygame.Surface(page_size)
@@ -38,13 +40,15 @@ def text_to_image(text, page_size=[1240, 1754], content_size = [1220, 1734]):  #
             parts = line.split('{math}')  # Раздел строки на "математические" и "нематематические" части
             for i, part in enumerate(parts):  # Проход по всем частям строки
                 if i % 2 == 1:
-                    renders.append(alttex.render_math(part, font_size))  # В случае, если часть "математическая" отправить строку в модуль alttex и получить результат рендера
+                    renders.append(alttex.render_math(part,
+                                                      font_size))  # В случае, если часть "математическая" отправить строку в модуль alttex и получить результат рендера
                 else:
                     j = 0
                     while j < len(part):  # Проход по всем символам
-                        if part[j] == '{' and (j == 0 or part[j - 1] != '\\'):  # Проверка на то, принадлежит ли символ команде
+                        if part[j] == '{' and (
+                                j == 0 or part[j - 1] != '\\'):  # Проверка на то, принадлежит ли символ команде
                             k = get_brack(part, j)[1]
-                            com = part[j + 1 : k]
+                            com = part[j + 1: k]
                             if com.find('font_size') == 0:
                                 font_size = int(eval(com.split('=')[-1]) * page_size[0] / 600)
                             if com.find('font_name') == 0:
@@ -67,15 +71,19 @@ def text_to_image(text, page_size=[1240, 1754], content_size = [1220, 1734]):  #
                             j = k + 1
                         else:
                             try:
-                                if not (part[j] == '\\' and not (len(part) == j + 1 or part[j + 1] != '{')):  # Если символ "\" стоит перед командой, то команда игнорируется и остаётся строкой
+                                if not (part[j] == '\\' and not (len(part) == j + 1 or part[
+                                    j + 1] != '{')):  # Если символ "\" стоит перед командой, то команда игнорируется и остаётся строкой
                                     renders.append(font.render(part[j], True, color))
                                     if part[j] != ' ' and underline:
-                                        pygame.draw.line(renders[-1], color, [0, renders[-1].get_height() - 1], [renders[-1].get_width(), renders[-1].get_height() - 1])
+                                        pygame.draw.line(renders[-1], color, [0, renders[-1].get_height() - 1],
+                                                         [renders[-1].get_width(), renders[-1].get_height() - 1])
                             except pygame.error:
-                                pass#rect = pygame.Surface([font_size, font_size // 2])
+                                pass  # rect = pygame.Surface([font_size, font_size // 2])
                             j += 1
-            szx = sum([renders[x].get_width() for x in range(len(renders))] + [0])  # Определение горизонтального размера строки
-            szy = max([renders[x].get_height() for x in range(len(renders))] + [0])  # Определение верикального размера строки
+            szx = sum([renders[x].get_width() for x in range(len(renders))] + [
+                0])  # Определение горизонтального размера строки
+            szy = max(
+                [renders[x].get_height() for x in range(len(renders))] + [0])  # Определение верикального размера строки
             scr = pygame.Surface([szx, szy])
             scr.fill([255] * 3)
             pos = 0
