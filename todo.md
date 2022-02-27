@@ -41,4 +41,4 @@
     - [ ] main
     - [ ] setup
 - [x] Инструкция
-- [ ] AltTeX Formula
+- [x] AltTeX Formula
